@@ -32,11 +32,15 @@ class BastionServiceProvider extends PackageServiceProvider
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
             ->hasInstallCommand(function (InstallCommand $command) {
+                $command->call('vendor:publish', [
+                    '--provider' => 'Spatie\Permission\PermissionServiceProvider',
+                ]);
+
                 $command
-                    ->publishConfigFile()
-                    ->publishMigrations()
-                    ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub('chrisreedio/bastion');
+                    ->publishConfigFile();
+                // ->publishMigrations()
+                // ->askToRunMigrations()
+                // ->askToStarRepoOnGitHub('chrisreedio/bastion');
             });
 
         $configFileName = $package->shortName();
