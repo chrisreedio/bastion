@@ -4,7 +4,6 @@ namespace ChrisReedIO\Bastion;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use ChrisReedIO\Bastion\Resources;
 
 class BastionPlugin implements Plugin
 {
