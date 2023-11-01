@@ -15,7 +15,9 @@ class BastionPlugin implements Plugin
     public function register(Panel $panel): void
     {
         $panel->resources([
-            Resources\Security\UserResource::class,
+            Resources\UserResource::class,
+            Resources\RoleResource::class,
+            Resources\PermissionResource::class,
         ]);
     }
 
