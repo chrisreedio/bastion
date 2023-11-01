@@ -32,14 +32,15 @@ class BastionServiceProvider extends PackageServiceProvider
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
             ->hasInstallCommand(function (InstallCommand $command) {
-                $command->call('vendor:publish', [
+                $command->callSilent('vendor:publish', [
                     '--provider' => 'Spatie\Permission\PermissionServiceProvider',
                 ]);
+                // $command->
 
                 $command
-                    ->publishConfigFile();
-                // ->publishMigrations()
-                // ->askToRunMigrations()
+                    ->publishConfigFile()
+                    ->publishMigrations()
+                    ->askToRunMigrations();
                 // ->askToStarRepoOnGitHub('chrisreedio/bastion');
             });
 
@@ -152,7 +153,7 @@ class BastionServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            // 'create_bastion_table',
+            'modify_roles_table_add_sso_group_column',
         ];
     }
 }
