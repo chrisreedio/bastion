@@ -3,6 +3,7 @@
 namespace ChrisReedIO\Bastion;
 
 use ChrisReedIO\Bastion\Commands\BastionCommand;
+use ChrisReedIO\Bastion\Commands\BastionGenerate;
 use ChrisReedIO\Bastion\Testing\TestsBastion;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
@@ -121,6 +122,7 @@ class BastionServiceProvider extends PackageServiceProvider
     {
         return [
             BastionCommand::class,
+            BastionGenerate::class,
         ];
     }
 
