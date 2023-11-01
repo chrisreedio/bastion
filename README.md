@@ -70,6 +70,9 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
+Special thanks to @Althinect and @bezhanSalleh for their packages and hard work. 
+This is both inspired by and based on their work. This package would not be possible without them.
+
 - [Chris Reed](https://github.com/chrisreedio)
 - [All Contributors](../../contributors)
 
