@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace ChrisReedIO\Bastion\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class BastionCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'bastion';
 
     public $description = 'My command';
 

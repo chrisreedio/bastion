@@ -1,20 +1,23 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace ChrisReedIO\Bastion;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use ChrisReedIO\Bastion\Resources;
 
-class SkeletonPlugin implements Plugin
+class BastionPlugin implements Plugin
 {
     public function getId(): string
     {
-        return 'skeleton';
+        return 'bastion';
     }
 
     public function register(Panel $panel): void
     {
-        //
+        $panel->resources([
+            Resources\Security\UserResource::class,
+        ]);
     }
 
     public function boot(Panel $panel): void
