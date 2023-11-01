@@ -32,12 +32,13 @@ class BastionServiceProvider extends PackageServiceProvider
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
             ->hasInstallCommand(function (InstallCommand $command) {
-                $command->callSilent('vendor:publish', [
-                    '--provider' => 'Spatie\Permission\PermissionServiceProvider',
-                ]);
-                // $command->
-
                 $command
+                    ->startWith(function (InstallCommand $command) {
+                        $command->comment('Publishing Spatie\'s Permission\'s config and migration(s)...');
+                        $command->call('vendor:publish', [
+                            '--provider' => 'Spatie\Permission\PermissionServiceProvider',
+                        ]);
+                    })
                     ->publishConfigFile()
                     ->publishMigrations()
                     ->askToRunMigrations();
