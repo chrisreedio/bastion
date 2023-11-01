@@ -1,9 +1,9 @@
 <?php
 
-namespace ChrisReedIO\Bastion\Resources\Security;
+namespace ChrisReedIO\Bastion\Resources;
 
 use App\Models\User;
-use ChrisReedIO\Bastion\Resources\Security\UserResource\Pages;
+use ChrisReedIO\Bastion\Resources\UserResource\Pages;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
