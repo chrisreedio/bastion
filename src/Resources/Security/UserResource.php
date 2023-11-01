@@ -49,6 +49,7 @@ class UserResource extends Resource
                 //     ->dateTime()
                 //     ->sortable(),
                 Tables\Columns\TextColumn::make('roles.name')
+                    ->placeholder('No Roles')
                     ->listWithLineBreaks()
                     ->badge(),
                 Tables\Columns\TextColumn::make('created_at')
