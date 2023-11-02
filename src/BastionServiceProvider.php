@@ -45,7 +45,7 @@ class BastionServiceProvider extends PackageServiceProvider
                     })
                     // ->publishConfigFile()
                     ->publishMigrations();
-                    // ->askToRunMigrations();
+                // ->askToRunMigrations();
                 // ->askToStarRepoOnGitHub('chrisreedio/bastion');
             });
 
