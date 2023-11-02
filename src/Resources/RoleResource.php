@@ -52,7 +52,8 @@ class RoleResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $sso_enabled = fn() => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
+        $sso_enabled = fn () => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
+
         return $form
             ->schema([
                 Section::make()
@@ -93,7 +94,8 @@ class RoleResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $sso_enabled = fn() => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
+        $sso_enabled = fn () => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
+
         return $table
             ->columns([
                 TextColumn::make('id')
