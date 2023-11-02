@@ -7,6 +7,7 @@ use Filament\Facades\Filament;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
+
 use function array_diff;
 use function class_basename;
 use function collect;
@@ -43,7 +44,7 @@ class Bastion
 
         $methods = array_diff(get_class_methods($policyName), get_class_methods(HandlesAuthorization::class));
         // $permissionNames = collect($methods)->map(fn($method) => Str::snake($method) . '::' . $modelName)->all();
-        $permissionNames = collect($methods)->map(fn($method) => Str::snake($method))->all();
+        $permissionNames = collect($methods)->map(fn ($method) => Str::snake($method))->all();
 
         dump($permissionNames);
 

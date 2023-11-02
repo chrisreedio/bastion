@@ -8,12 +8,12 @@ use Filament\Resources\Pages\ViewRecord;
 
 class ViewPermission extends ViewRecord
 {
-	protected static string $resource = PermissionResource::class;
+    protected static string $resource = PermissionResource::class;
 
-	public function getHeaderActions(): array
-	{
-		return [
-			EditAction::make(),
-		];
-	}
+    public function getHeaderActions(): array
+    {
+        return [
+            EditAction::make(),
+        ];
+    }
 }

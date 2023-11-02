@@ -7,5 +7,5 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreatePermission extends CreateRecord
 {
-	protected static string $resource = PermissionResource::class;
+    protected static string $resource = PermissionResource::class;
 }

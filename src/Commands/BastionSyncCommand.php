@@ -20,5 +20,4 @@ class BastionSyncCommand extends Command
 
         return self::SUCCESS;
     }
-
 }

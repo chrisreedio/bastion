@@ -19,10 +19,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+
 use function __;
 use function class_basename;
 use function explode;
-use function startsWith;
 
 class PermissionResource extends Resource
 {
@@ -56,8 +56,8 @@ class PermissionResource extends Resource
     public static function form(Form $form): Form
     {
         $resources = collect(Filament::getResources())
-            ->mapWithKeys(fn($resource) => [
-                $resource => Str::remove('Resource', class_basename($resource))
+            ->mapWithKeys(fn ($resource) => [
+                $resource => Str::remove('Resource', class_basename($resource)),
             ])->all();
 
         return $form
@@ -99,9 +99,10 @@ class PermissionResource extends Resource
                         if (Str::startsWith($state, 'App')) {
                             return Str::remove('App\\Filament\\Resources\\', $state);
                         }
+
                         return $state;
                     })
-                    ->color(fn($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
+                    ->color(fn ($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
                     ->badge()
                     ->sortable()
                     ->searchable(),
@@ -110,6 +111,7 @@ class PermissionResource extends Resource
                     ->formatStateUsing(function (string $state): string {
                         // Split upon the :: delimiter and return the first element then convert to title case from snake case
                         $permission = explode('::', $state)[0];
+
                         // dd($permission);
                         return Str::of($permission)->snake()->replace('_', ' ')->title();
                     })

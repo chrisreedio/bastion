@@ -20,5 +20,5 @@ return [
         'roles' => 'Roles',
         'permissions' => 'Permissions',
         'permission' => 'Permission',
-    ]
+    ],
 ];
