@@ -19,6 +19,16 @@ You can install the package via composer:
 composer require chrisreedio/bastion
 ```
 
+Update your PanelProvider to include the plugin:
+
+```php
+$panel
+    ->plugins([
+        // ... Other Plugins
+        \ChrisReedIO\Bastion\BastionPlugin::make(),
+    ])
+```
+
 You can publish and run the migrations with:
 
 ```bash
@@ -76,9 +86,15 @@ php artisan vendor:publish --tag="bastion-seeders"
 
 ## Usage
 
+A super admin role may be defined by using the `->superAdminRole` method on the plugin.
+
 ```php
-$bastion = new ChrisReedIO\Bastion();
-echo $bastion->echoPhrase('Hello, ChrisReedIO!');
+$panel
+    ->plugins([
+        // ... Other Plugins
+        \ChrisReedIO\Bastion\BastionPlugin::make()
+            ->superAdminRole('Developer'),
+	])
 ```
 
 ## Testing
