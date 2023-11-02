@@ -16,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
 
+use function class_exists;
 use function config;
 
 class RoleResource extends Resource
@@ -51,7 +52,7 @@ class RoleResource extends Resource
 
     public static function form(Form $form): Form
     {
-        // dd(config('bastion.default_guard'));
+        $sso_enabled = fn() => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
         return $form
             ->schema([
                 Section::make()
@@ -75,7 +76,7 @@ class RoleResource extends Resource
 
                                 TextInput::make('sso_group')
                                     ->label(__('bastion::messages.field.sso_group'))
-                                    ->visible(fn () => config('bastion.sso.enabled', false)),
+                                    ->visible($sso_enabled),
                                 // Select::make(config('permission.column_names.team_foreign_key', 'team_id'))
                                 // 	->label(__('bastion::messages.field.team'))
                                 // 	->hidden(fn () => !config('permission.teams', false) || Filament::hasTenancy())
@@ -92,6 +93,7 @@ class RoleResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $sso_enabled = fn() => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
         return $table
             ->columns([
                 TextColumn::make('id')
@@ -99,6 +101,11 @@ class RoleResource extends Resource
                     ->searchable(),
                 TextColumn::make('name')
                     ->label(__('bastion::messages.field.name'))
+                    ->searchable(),
+                TextColumn::make('sso_group')
+                    ->label(__('bastion::messages.field.sso_group'))
+                    ->visible($sso_enabled)
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('permissions_count')
                     ->counts('permissions')
