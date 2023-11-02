@@ -70,13 +70,13 @@ class BastionServiceProvider extends PackageServiceProvider
         if (file_exists($package->basePath('/../database/seeders'))) {
             $this->publishes([
                 $package->basePath('/../database/seeders') => database_path('seeders'),
-            ], 'bastion-seeders');
+            ], 'bastion-seeder');
         }
     }
 
     public function packageRegistered(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/bastion.php', 'bastion');
+        //
     }
 
     public function packageBooted(): void
