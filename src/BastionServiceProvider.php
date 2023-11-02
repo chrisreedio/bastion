@@ -68,8 +68,6 @@ class BastionServiceProvider extends PackageServiceProvider
         }
 
         if (file_exists($package->basePath('/../database/seeders'))) {
-            // $package->hasAssets();
-            // dd('has seeders!');
             $this->publishes([
                 $package->basePath('/../database/seeders') => database_path('seeders'),
             ], 'bastion-seeders');
