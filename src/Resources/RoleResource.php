@@ -5,7 +5,6 @@ namespace ChrisReedIO\Bastion\Resources;
 use ChrisReedIO\Bastion\BastionPlugin;
 use ChrisReedIO\Bastion\Resources\RoleResource\Pages;
 use ChrisReedIO\Bastion\Resources\RoleResource\RelationManagers;
-use Closure;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
@@ -19,6 +18,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
+
 use function class_exists;
 use function config;
 
@@ -55,7 +55,7 @@ class RoleResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $sso_enabled = fn() => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
+        $sso_enabled = fn () => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
         $bastionPlugin = BastionPlugin::get();
         $superAdminRole = $bastionPlugin->getSuperAdminRole();
 
@@ -118,7 +118,7 @@ class RoleResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $sso_enabled = fn() => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
+        $sso_enabled = fn () => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
         $bastionPlugin = BastionPlugin::get();
         $superAdminRole = $bastionPlugin->getSuperAdminRole();
 
@@ -147,7 +147,7 @@ class RoleResource extends Resource
                 Tables\Columns\IconColumn::make('super_admin')
                     ->label(__('bastion::messages.field.super_admin'))
                     ->boolean()
-                    ->default(fn($record) => $record->name === $superAdminRole),
+                    ->default(fn ($record) => $record->name === $superAdminRole),
             ])
             ->filters([])
             ->actions([
