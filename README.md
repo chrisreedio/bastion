@@ -7,7 +7,9 @@
 
 
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Bastion is a package/plugin for Filament and Laravel to quickly scaffold out access control for your application.
+
+It's primary use case is with SSO and Azure Active Directory, but it can be used with any authentication provider.
 
 ## Installation
 
@@ -40,8 +42,37 @@ This is the contents of the published config file:
 
 ```php
 return [
+    'models' => [
+        'permission' => \Spatie\Permission\Models\Permission::class,
+        'role' => \Spatie\Permission\Models\Role::class,
+        'user' => '\App\Models\User',
+    ],
+
+    'permissions' => [
+        'preload' => true,
+
+    ],
+
+    'default_guard' => 'web',
+    'guards' => [
+        // value => 'Custom Label'
+        'web' => 'Web',
+        'api' => 'API',
+        // Your other custom guards here
+    ],
+
+    'sso' => [
+        'enabled' => false,
+    ],
 ];
 ```
+
+You can publish the seeder(s) with:
+
+```bash
+php artisan vendor:publish --tag="bastion-seeders"
+```
+
 
 ## Usage
 

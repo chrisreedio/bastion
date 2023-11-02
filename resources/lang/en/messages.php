@@ -13,6 +13,7 @@ return [
 
     'field' => [
         'name' => 'Name',
+        'resource' => 'Resource',
         'guard_name' => 'Guard Name',
         'sso_group' => 'SSO Group',
         'role' => 'Role',
