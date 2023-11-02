@@ -43,9 +43,9 @@ class BastionServiceProvider extends PackageServiceProvider
                             '--provider' => 'Spatie\Permission\PermissionServiceProvider',
                         ]);
                     })
-                    ->publishConfigFile()
-                    ->publishMigrations()
-                    ->askToRunMigrations();
+                    // ->publishConfigFile()
+                    ->publishMigrations();
+                    // ->askToRunMigrations();
                 // ->askToStarRepoOnGitHub('chrisreedio/bastion');
             });
 
@@ -76,6 +76,7 @@ class BastionServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/bastion.php', 'bastion');
     }
 
     public function packageBooted(): void
