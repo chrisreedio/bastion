@@ -24,7 +24,7 @@ class PermissionRelationManager extends RelationManager
      */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('bastion::messages.section.permissions') ?? (string) str(static::getRelationshipName())
+        return __('bastion::messages.section.permissions') ?? (string)str(static::getRelationshipName())
             ->kebab()
             ->replace('-', ' ')
             ->headline();
@@ -63,16 +63,18 @@ class PermissionRelationManager extends RelationManager
                 TextColumn::make('guard_name')
                     ->searchable()
                     ->label(__('bastion::messages.field.guard_name')),
-
             ])
-            ->filters([])->headerActions([
-                AttachAction::make('Attach Permission')->preloadRecordSelect()->after(fn () => app()
+            ->filters([
+                //
+            ])
+            ->headerActions([
+                AttachAction::make('Attach Permission')->preloadRecordSelect()->after(fn() => app()
                     ->make(PermissionRegistrar::class)
                     ->forgetCachedPermissions()),
             ])->actions([
-                DetachAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+                DetachAction::make()->after(fn() => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
             ])->bulkActions([
-                DetachBulkAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+                DetachBulkAction::make()->after(fn() => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
             ]);
     }
 }
