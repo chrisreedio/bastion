@@ -9,10 +9,13 @@ return [
         'permissions' => 'Permissions',
         'role' => 'Role',
         'roles' => 'Roles',
+        'users' => 'Users',
     ],
 
     'field' => [
         'name' => 'Name',
+        'super_admin' => 'Super Admin',
+        'super_admin-hint' => 'Super Admins have access to all permissions and cannot be edited or deleted.',
         'resource' => 'Resource',
         'guard_name' => 'Guard Name',
         'sso_group' => 'SSO Group',
