@@ -2,6 +2,7 @@
 
 namespace ChrisReedIO\Bastion\Resources\RoleResource\RelationManagers;
 
+use ChrisReedIO\Bastion\BastionPlugin;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -22,7 +23,7 @@ class UserRelationManager extends RelationManager
      */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('bastion::messages.section.users') ?? (string) str(static::getRelationshipName())
+        return __('bastion::messages.section.users') ?? (string)str(static::getRelationshipName())
             ->kebab()
             ->replace('-', ' ')
             ->headline();
@@ -49,17 +50,25 @@ class UserRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
+        $plugin = BastionPlugin::get();
+        $sso_enabled = $plugin->getSsoEnabled();
+
         return $table
             // Support changing table heading by translations.
             ->heading(__('bastion::messages.section.users'))
             ->columns([
-                TextColumn::make(config('bastion.user_name_column'))
+                TextColumn::make(config('bastion.user_name_column', 'name'))
                     ->label(__('bastion::messages.field.name'))
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make(config('bastion.user_email_column', 'email'))
+                    ->label(__('bastion::messages.field.email'))
+                    ->sortable()
                     ->searchable(),
             ])
-            ->filters([])->headerActions([
+            ->filters([])->headerActions($sso_enabled ? [] : [
                 AttachAction::make(),
-            ])->actions([
+            ])->actions($sso_enabled ? [] : [
                 DetachAction::make(),
             ])->bulkActions([
                 //

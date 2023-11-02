@@ -14,14 +14,15 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
 use function __;
 use function class_basename;
+use function collect;
 use function explode;
 
 class PermissionResource extends Resource
@@ -56,7 +57,7 @@ class PermissionResource extends Resource
     public static function form(Form $form): Form
     {
         $resources = collect(Filament::getResources())
-            ->mapWithKeys(fn ($resource) => [
+            ->mapWithKeys(fn($resource) => [
                 $resource => Str::remove('Resource', class_basename($resource)),
             ])->all();
 
@@ -88,10 +89,24 @@ class PermissionResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $resources = Filament::getResources();
+        $resourceOptions = collect($resources)->mapWithKeys(fn($resource) => [$resource => $resource::getLabel() ?? $resource])->all();
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
+                // TextColumn::make('id')
+                //     ->label('ID')
+                //     ->sortable()
+                //     ->searchable(),
+                TextColumn::make('name')
+                    ->label(__('bastion::messages.field.name'))
+                    ->formatStateUsing(function (string $state): string {
+                        // Split upon the :: delimiter and return the first element then convert to title case from snake case
+                        $permission = explode('::', $state)[0];
+
+                        // dd($permission);
+                        return Str::of($permission)->snake()->replace('_', ' ')->title();
+                    })
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('resource')
                     ->label(__('bastion::messages.field.resource'))
@@ -102,19 +117,9 @@ class PermissionResource extends Resource
 
                         return $state;
                     })
-                    ->color(fn ($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
+                    ->color(fn($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
                     ->badge()
                     ->sortable()
-                    ->searchable(),
-                TextColumn::make('name')
-                    ->label(__('bastion::messages.field.name'))
-                    ->formatStateUsing(function (string $state): string {
-                        // Split upon the :: delimiter and return the first element then convert to title case from snake case
-                        $permission = explode('::', $state)[0];
-
-                        // dd($permission);
-                        return Str::of($permission)->snake()->replace('_', ' ')->title();
-                    })
                     ->searchable(),
                 TextColumn::make('guard_name')
                     ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.permissions.isToggledHiddenByDefault', true))
@@ -123,9 +128,11 @@ class PermissionResource extends Resource
 
             ])
             ->defaultGroup('resource')
-            // ->groups(['resource', 'display_name'])
+            ->groups(['resource', 'display_name'])
             ->filters([
-                //
+                SelectFilter::make('resource')
+                    ->label(__('bastion::messages.field.resource'))
+                    ->options($resourceOptions),
             ])->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),

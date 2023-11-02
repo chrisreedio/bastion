@@ -12,10 +12,21 @@ return [
         'users' => 'Users',
     ],
 
+    'table' => [
+        'empty' => [
+            'permissions' => 'No permissions found.',
+            'permissions_super_admin' => 'Super Admins have access to all permissions!',
+        ],
+    ],
+
     'field' => [
         'name' => 'Name',
+        'full_name' => 'Full Name',
+        'short_name' => 'Short Name',
         'super_admin' => 'Super Admin',
-        'super_admin-hint' => 'Super Admins have access to all permissions and cannot be edited or deleted.',
+        'email' => 'Email',
+        'permissions_count' => 'Permissions Count',
+        'super_admin-hint' => 'Super Admins have all permissions and cannot be edited or deleted.',
         'resource' => 'Resource',
         'guard_name' => 'Guard Name',
         'sso_group' => 'SSO Group',

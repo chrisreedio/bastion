@@ -61,4 +61,9 @@ class BastionPlugin implements Plugin
     {
         return $this->superAdminRole;
     }
+
+    public function getSsoEnabled(): bool
+    {
+        return config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
+    }
 }

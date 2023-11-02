@@ -2,12 +2,15 @@
 
 namespace ChrisReedIO\Bastion;
 
+use ChrisReedIO\Bastion\Enums\DefaultPermissions;
 use ChrisReedIO\PolicyGenerator\PolicyGenerator;
 use Filament\Facades\Filament;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 
+use Spatie\Permission\Models\Role;
 use function array_diff;
 use function class_basename;
 use function collect;
@@ -44,7 +47,7 @@ class Bastion
 
         $methods = array_diff(get_class_methods($policyName), get_class_methods(HandlesAuthorization::class));
         // $permissionNames = collect($methods)->map(fn($method) => Str::snake($method) . '::' . $modelName)->all();
-        $permissionNames = collect($methods)->map(fn ($method) => Str::snake($method))->all();
+        $permissionNames = collect($methods)->map(fn($method) => Str::snake($method))->all();
 
         dump($permissionNames);
 
@@ -64,5 +67,22 @@ class Bastion
         // dump($methods);
 
         return true;
+    }
+
+
+    public static function getResourcePermissions(string $resource, ?array $permissions = null): Collection
+    {
+        $permissionQuery = Permission::query()->where('resource', $resource);
+        // If we have any permissions, filter by them
+        // Each permission is the prefix of the name of the permission
+        if ($permissions) {
+            $resourceShortName = Str::snake(class_basename(preg_replace('/Resource$/', '', $resource)));
+            $permissionNames = collect($permissions)
+                ->map(fn($permission) => (($permission instanceof DefaultPermissions) ? $permission->value : $permission) . '::' . $resourceShortName)
+                ->all();
+            $permissionQuery->whereIn('name', $permissionNames);
+        }
+
+        return $permissionQuery->get();
     }
 }

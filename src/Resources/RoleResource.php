@@ -5,21 +5,16 @@ namespace ChrisReedIO\Bastion\Resources;
 use ChrisReedIO\Bastion\BastionPlugin;
 use ChrisReedIO\Bastion\Resources\RoleResource\Pages;
 use ChrisReedIO\Bastion\Resources\RoleResource\RelationManagers;
-use Closure;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
-use function class_exists;
 use function config;
 
 class RoleResource extends Resource
@@ -55,72 +50,72 @@ class RoleResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $sso_enabled = fn() => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
-        $bastionPlugin = BastionPlugin::get();
-        $superAdminRole = $bastionPlugin->getSuperAdminRole();
+        $plugin = BastionPlugin::get();
+        $sso_enabled = $plugin->getSsoEnabled();
+        $superAdminRole = $plugin->getSuperAdminRole();
 
         return $form
             ->schema([
                 Section::make()
                     ->schema([
-                        Grid::make(2)
-                            ->schema([
-                                TextInput::make('name')
-                                    ->label(__('bastion::messages.field.name'))
-                                    ->required(),
-                                Select::make('guard_name')
-                                    ->label(__('bastion::messages.field.guard_name'))
-                                    ->options(config('bastion.guards'))
-                                    // ->selectablePlaceholder(false)
-                                    ->default(config('bastion.default_guard'))
-                                    ->required(),
-                                Select::make('permissions')
-                                    ->multiple()
-                                    ->label(__('bastion::messages.field.permissions'))
-                                    ->relationship('permissions', 'name')
-                                    ->preload(config('bastion.permissions.preload', true)),
 
-                                TextInput::make('sso_group')
-                                    ->label(__('bastion::messages.field.sso_group'))
-                                    ->visible($sso_enabled),
+                        TextInput::make('name')
+                            ->label(__('bastion::messages.field.name'))
+                            ->required(),
 
-                                Placeholder::make('super_admin')
-                                    ->label(__('bastion::messages.field.super_admin'))
-                                    ->hintIcon('heroicon-o-shield-check')
-                                    ->hintIconTooltip(__('bastion::messages.field.super_admin-hint'))
-                                    ->hintColor('info')
-                                    ->content(__('bastion::messages.field.super_admin-hint'))
-                                    ->visible(fn ($record) => $record?->name === $superAdminRole),
+                        Select::make('guard_name')
+                            ->label(__('bastion::messages.field.guard_name'))
+                            ->options(config('bastion.guards'))
+                            ->default(config('bastion.default_guard'))
+                            ->required(),
 
-                                // Fieldset::make()
-                                //     ->schema([
-                                //         Toggle::make('super_admin')
-                                //             // ->disabled()
-                                //             ->label(__('bastion::messages.field.super_admin'))
-                                //             ->afterStateHydrated(fn ($set, $record) => $set('super_admin', $record->name === $superAdminRole)),
-                                //             // ->default(fn ($record) => dd($record))//$record->name === $superAdminRole),
-                                //             // ->default(fn() => true),
-                                //             // ->default(true),
-                                //     ]),
-                                // Select::make(config('permission.column_names.team_foreign_key', 'team_id'))
-                                // 	->label(__('bastion::messages.field.team'))
-                                // 	->hidden(fn () => !config('permission.teams', false) || Filament::hasTenancy())
-                                // 	->options(
-                                // 		fn () => config('bastion.team_model', App\Models\Team::class)::pluck('name', 'id')
-                                // 	)
-                                // 	->dehydrated(fn ($state) => (int) $state <= 0)
-                                // 	->placeholder(__('bastion::messages.select-team'))
-                                // 	->hint(__('bastion::messages.select-team-hint')),
-                            ]),
-                    ]),
+                        TextInput::make('sso_group')
+                            ->label(__('bastion::messages.field.sso_group'))
+                            ->visible($sso_enabled),
+
+                        Placeholder::make('super_admin')
+                            ->label(__('bastion::messages.field.super_admin'))
+                            ->hintIcon('heroicon-o-shield-check')
+                            // ->hint(__('bastion::messages.field.super_admin-hint'))
+                            ->hintColor('info')
+                            ->content(__('bastion::messages.field.super_admin-hint'))
+                            ->columnSpan(['sm' => 1, 'lg' => 3])
+                            ->visible(fn($record) => $record?->name === $superAdminRole),
+
+                        // Fieldset::make()
+                        //     ->schema([
+                        //         Toggle::make('super_admin')
+                        //             // ->disabled()
+                        //             ->label(__('bastion::messages.field.super_admin'))
+                        //             ->afterStateHydrated(fn ($set, $record) => $set('super_admin', $record->name === $superAdminRole)),
+                        //             // ->default(fn ($record) => dd($record))//$record->name === $superAdminRole),
+                        //             // ->default(fn() => true),
+                        //             // ->default(true),
+                        //     ]),
+                        // Select::make(config('permission.column_names.team_foreign_key', 'team_id'))
+                        // 	->label(__('bastion::messages.field.team'))
+                        // 	->hidden(fn () => !config('permission.teams', false) || Filament::hasTenancy())
+                        // 	->options(
+                        // 		fn () => config('bastion.team_model', App\Models\Team::class)::pluck('name', 'id')
+                        // 	)
+                        // 	->dehydrated(fn ($state) => (int) $state <= 0)
+                        // 	->placeholder(__('bastion::messages.select-team'))
+                        // 	->hint(__('bastion::messages.select-team-hint')),
+
+                    ])
+                    ->columns([
+                        'sm' => 1,
+                        'md' => 2,
+                        'lg' => $sso_enabled ? 3 : 2,
+                    ])
             ]);
     }
 
     public static function table(Table $table): Table
     {
-        $sso_enabled = fn() => config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
-        $bastionPlugin = BastionPlugin::get();
-        $superAdminRole = $bastionPlugin->getSuperAdminRole();
+        $plugin = BastionPlugin::get();
+        $sso_enabled = $plugin->getSsoEnabled();
+        $superAdminRole = $plugin->getSuperAdminRole();
 
         return $table
             ->columns([
@@ -138,16 +133,22 @@ class RoleResource extends Resource
                 TextColumn::make('permissions_count')
                     ->counts('permissions')
                     ->label(__('bastion::messages.field.permissions_count'))
-                    ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.roles.isToggledHiddenByDefault', true))
+                    ->color(fn($record) => $record->name === $superAdminRole ? 'success' : 'info')
+                    // ->formatStateUsing(function ($state, $record) {
+                    //     return $state;
+                    // })
+                    ->formatStateUsing(fn ($state, $record) => $record->name === $superAdminRole ? 'Super Admin' : $state)
+                    ->badge()
+                    ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.roles.isToggledHiddenByDefault', false))
                     ->searchable(),
                 TextColumn::make('guard_name')
                     ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.roles.isToggledHiddenByDefault', true))
                     ->label(__('bastion::messages.field.guard_name'))
                     ->searchable(),
-                Tables\Columns\IconColumn::make('super_admin')
-                    ->label(__('bastion::messages.field.super_admin'))
-                    ->boolean()
-                    ->default(fn($record) => $record->name === $superAdminRole),
+                // Tables\Columns\IconColumn::make('super_admin')
+                //     ->label(__('bastion::messages.field.super_admin'))
+                //     ->boolean()
+                //     ->default(fn($record) => $record->name === $superAdminRole),
             ])
             ->filters([])
             ->actions([
