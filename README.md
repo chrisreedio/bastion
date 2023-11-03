@@ -11,6 +11,9 @@ Bastion is a package/plugin for Filament and Laravel to quickly scaffold out acc
 
 It's primary use case is with SSO and Azure Active Directory, but it can be used with any authentication provider.
 
+> [!WARNING]
+> This package is still in development and is not ready for production use.
+
 ## Installation
 
 You can install the package via composer:
