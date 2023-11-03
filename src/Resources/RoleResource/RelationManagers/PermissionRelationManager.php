@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Spatie\Permission\PermissionRegistrar;
+
 use function __;
 use function collect;
 use function explode;
@@ -32,7 +33,7 @@ class PermissionRelationManager extends RelationManager
      */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('bastion::messages.section.permissions') ?? (string)str(static::getRelationshipName())
+        return __('bastion::messages.section.permissions') ?? (string) str(static::getRelationshipName())
             ->kebab()
             ->replace('-', ' ')
             ->headline();
@@ -65,7 +66,8 @@ class PermissionRelationManager extends RelationManager
         // dd($superAdminRole);
         $isSuperAdmin = $this->getOwnerRecord()->name === $superAdminRole;
         $resources = Filament::getResources();
-        $resourceOptions = collect($resources)->mapWithKeys(fn($resource) => [$resource => $resource::getLabel() ?? $resource])->all();
+        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => $resource::getLabel() ?? $resource])->all();
+
         // dd($resourceOptions);
         return $table
             // Support changing table heading by translations.
@@ -97,7 +99,7 @@ class PermissionRelationManager extends RelationManager
 
                         return $state;
                     })
-                    ->color(fn($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
+                    ->color(fn ($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
                     ->badge()
                     ->sortable()
                     ->searchable(),
@@ -115,10 +117,10 @@ class PermissionRelationManager extends RelationManager
             ])
             ->groups($isSuperAdmin ? [] : ['resource', 'display_name'])
             ->defaultGroup('resource')
-            ->emptyStateHeading(fn() => $isSuperAdmin
+            ->emptyStateHeading(fn () => $isSuperAdmin
                 ? __('bastion::messages.table.empty.permissions_super_admin')
                 : __('bastion::messages.table.empty.permissions'))
-            ->emptyStateIcon(fn() => $isSuperAdmin ? 'heroicon-o-shield-check' : 'heroicon-o-x-mark')
+            ->emptyStateIcon(fn () => $isSuperAdmin ? 'heroicon-o-shield-check' : 'heroicon-o-x-mark')
             ->headerActions([
                 AttachAction::make('Attach Permission')
                     ->preloadRecordSelect()
@@ -129,11 +131,11 @@ class PermissionRelationManager extends RelationManager
                     //     ->make(PermissionRegistrar::class)
                     //     ->forgetCachedPermissions()
                     // )
-                    ->visible(fn($record) => !$isSuperAdmin),
+                    ->visible(fn ($record) => ! $isSuperAdmin),
             ])->actions([
-                DetachAction::make()->after(fn() => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+                DetachAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
             ])->bulkActions([
-                DetachBulkAction::make()->after(fn() => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+                DetachBulkAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
             ]);
     }
 }

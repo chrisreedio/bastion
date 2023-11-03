@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
+
 use function config;
 
 class RoleResource extends Resource
@@ -80,7 +81,7 @@ class RoleResource extends Resource
                             ->hintColor('info')
                             ->content(__('bastion::messages.field.super_admin-hint'))
                             ->columnSpan(['sm' => 1, 'lg' => 3])
-                            ->visible(fn($record) => $record?->name === $superAdminRole),
+                            ->visible(fn ($record) => $record?->name === $superAdminRole),
 
                         // Fieldset::make()
                         //     ->schema([
@@ -107,7 +108,7 @@ class RoleResource extends Resource
                         'sm' => 1,
                         'md' => 2,
                         'lg' => $sso_enabled ? 3 : 2,
-                    ])
+                    ]),
             ]);
     }
 
@@ -133,7 +134,7 @@ class RoleResource extends Resource
                 TextColumn::make('permissions_count')
                     ->counts('permissions')
                     ->label(__('bastion::messages.field.permissions_count'))
-                    ->color(fn($record) => $record->name === $superAdminRole ? 'success' : 'info')
+                    ->color(fn ($record) => $record->name === $superAdminRole ? 'success' : 'info')
                     // ->formatStateUsing(function ($state, $record) {
                     //     return $state;
                     // })
