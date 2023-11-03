@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
+use Spatie\Permission\Models\Permission;
 
 class ListPermissions extends ListRecords
 {
@@ -34,6 +35,7 @@ class ListPermissions extends ListRecords
         return [
             BulkAction::make('Attach Role')
                 ->action(function (Collection $records, array $data): void {
+                    /** @var Permission $record */
                     foreach ($records as $record) {
                         $record->roles()->sync($data['role']);
                         $record->save();

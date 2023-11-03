@@ -6,8 +6,7 @@ use ChrisReedIO\Bastion\Enums\DefaultPermissions;
 use ChrisReedIO\Bastion\Resources\PermissionResource\Pages;
 use ChrisReedIO\Bastion\Resources\PermissionResource\RelationManagers;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -21,7 +20,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
 use function __;
 use function class_basename;
 use function collect;
@@ -59,32 +57,32 @@ class PermissionResource extends Resource
     public static function form(Form $form): Form
     {
         $resources = collect(Filament::getResources())
-            ->mapWithKeys(fn ($resource) => [
+            ->mapWithKeys(fn($resource) => [
                 $resource => Str::remove('Resource', class_basename($resource)),
             ])->all();
 
         return $form
             ->schema([
-                Card::make()
+                Section::make()
+                    ->heading()
+                    ->columns(2)
                     ->schema([
-                        Grid::make(2)->schema([
-                            Select::make('resource')
-                                ->label(__('bastion::messages.field.resource'))
-                                ->options($resources),
-                            TextInput::make('name')
-                                ->label(__('bastion::messages.field.name'))
-                                ->required(),
-                            Select::make('guard_name')
-                                ->label(__('bastion::messages.field.guard_name'))
-                                ->options(config('bastion.guards'))
-                                ->default(config('bastion.default_guard'))
-                                ->required(),
-                            Select::make('roles')
-                                ->multiple()
-                                ->label(__('bastion::messages.field.roles'))
-                                ->relationship('roles', 'name')
-                                ->preload(config('bastion.preload_roles', true)),
-                        ]),
+                        Select::make('resource')
+                            ->label(__('bastion::messages.field.resource'))
+                            ->options($resources),
+                        TextInput::make('name')
+                            ->label(__('bastion::messages.field.name'))
+                            ->required(),
+                        Select::make('guard_name')
+                            ->label(__('bastion::messages.field.guard_name'))
+                            ->options(config('bastion.guards'))
+                            ->default(config('bastion.default_guard'))
+                            ->required(),
+                        Select::make('roles')
+                            ->multiple()
+                            ->label(__('bastion::messages.field.roles'))
+                            ->relationship('roles', 'name')
+                            ->preload(config('bastion.preload_roles', true)),
                     ]),
             ]);
     }
@@ -92,7 +90,7 @@ class PermissionResource extends Resource
     public static function table(Table $table): Table
     {
         $resources = Filament::getResources();
-        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => Str::title($resource::getModelLabel()) ?? $resource])->all();
+        $resourceOptions = collect($resources)->mapWithKeys(fn($resource) => [$resource => Str::title($resource::getModelLabel())])->all();
 
         return $table
             ->columns([
@@ -120,7 +118,7 @@ class PermissionResource extends Resource
 
                         return $state;
                     })
-                    ->color(fn ($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
+                    ->color(fn($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
                     ->badge()
                     ->sortable()
                     ->searchable(),
@@ -158,6 +156,7 @@ class PermissionResource extends Resource
                 ]),
                 BulkAction::make('Attach Role')
                     ->action(function (Collection $records, array $data): void {
+                        /** @var Permission $record */
                         foreach ($records as $record) {
                             $record->roles()->sync($data['role']);
                             $record->save();

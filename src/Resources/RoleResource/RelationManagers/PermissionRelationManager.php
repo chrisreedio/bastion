@@ -34,10 +34,10 @@ class PermissionRelationManager extends RelationManager
      */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('bastion::messages.section.permissions') ?? (string) str(static::getRelationshipName())
-            ->kebab()
-            ->replace('-', ' ')
-            ->headline();
+        return __('bastion::messages.section.permissions');// ?? (string) str(static::getRelationshipName())
+            // ->kebab()
+            // ->replace('-', ' ')
+            // ->headline();
     }
 
     protected static function getModelLabel(): string
@@ -67,7 +67,7 @@ class PermissionRelationManager extends RelationManager
         // dd($superAdminRole);
         $isSuperAdmin = $this->getOwnerRecord()->name === $superAdminRole;
         $resources = Filament::getResources();
-        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => Str::title($resource::getModelLabel()) ?? $resource])->all();
+        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => Str::title($resource::getModelLabel())])->all();
 
         // dd($resourceOptions);
         return $table
