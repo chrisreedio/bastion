@@ -6,8 +6,7 @@ use ChrisReedIO\Bastion\Enums\DefaultPermissions;
 use ChrisReedIO\Bastion\Resources\PermissionResource\Pages;
 use ChrisReedIO\Bastion\Resources\PermissionResource\RelationManagers;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -65,26 +64,26 @@ class PermissionResource extends Resource
 
         return $form
             ->schema([
-                Card::make()
+                Section::make()
+                    ->heading()
+                    ->columns(2)
                     ->schema([
-                        Grid::make(2)->schema([
-                            Select::make('resource')
-                                ->label(__('bastion::messages.field.resource'))
-                                ->options($resources),
-                            TextInput::make('name')
-                                ->label(__('bastion::messages.field.name'))
-                                ->required(),
-                            Select::make('guard_name')
-                                ->label(__('bastion::messages.field.guard_name'))
-                                ->options(config('bastion.guards'))
-                                ->default(config('bastion.default_guard'))
-                                ->required(),
-                            Select::make('roles')
-                                ->multiple()
-                                ->label(__('bastion::messages.field.roles'))
-                                ->relationship('roles', 'name')
-                                ->preload(config('bastion.preload_roles', true)),
-                        ]),
+                        Select::make('resource')
+                            ->label(__('bastion::messages.field.resource'))
+                            ->options($resources),
+                        TextInput::make('name')
+                            ->label(__('bastion::messages.field.name'))
+                            ->required(),
+                        Select::make('guard_name')
+                            ->label(__('bastion::messages.field.guard_name'))
+                            ->options(config('bastion.guards'))
+                            ->default(config('bastion.default_guard'))
+                            ->required(),
+                        Select::make('roles')
+                            ->multiple()
+                            ->label(__('bastion::messages.field.roles'))
+                            ->relationship('roles', 'name')
+                            ->preload(config('bastion.preload_roles', true)),
                     ]),
             ]);
     }
@@ -92,7 +91,7 @@ class PermissionResource extends Resource
     public static function table(Table $table): Table
     {
         $resources = Filament::getResources();
-        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => Str::title($resource::getModelLabel()) ?? $resource])->all();
+        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => Str::title($resource::getModelLabel())])->all();
 
         return $table
             ->columns([
@@ -158,6 +157,7 @@ class PermissionResource extends Resource
                 ]),
                 BulkAction::make('Attach Role')
                     ->action(function (Collection $records, array $data): void {
+                        /** @var Permission $record */
                         foreach ($records as $record) {
                             $record->roles()->sync($data['role']);
                             $record->save();

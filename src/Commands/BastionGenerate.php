@@ -15,7 +15,6 @@ class BastionGenerate extends Command
     {
         // Figure out what resources exist
         $resources = Filament::getResources();
-        dump($resources);
 
         // For each resource, generate a policy
         foreach ($resources as $resource) {

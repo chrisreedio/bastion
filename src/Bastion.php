@@ -13,7 +13,6 @@ use Spatie\Permission\Models\Permission;
 use function array_diff;
 use function class_basename;
 use function collect;
-use function dump;
 use function get_class_methods;
 
 class Bastion
@@ -51,6 +50,7 @@ class Bastion
         // dump($permissionNames);
 
         foreach ($permissionNames as $permissionName) {
+            /** @phpstan-ignore-next-line  */
             Permission::firstOrCreate([
                 'display_name' => $permissionName,
                 'name' => $permissionName . '::' . $modelName,
@@ -65,6 +65,7 @@ class Bastion
 
     public static function getResourcePermissions(string $resource, array $permissions = null): Collection
     {
+        /** @phpstan-ignore-next-line  */
         $permissionQuery = Permission::query()->where('resource', $resource);
         // If we have any permissions, filter by them
         // Each permission is the prefix of the name of the permission
