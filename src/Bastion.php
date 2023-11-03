@@ -43,13 +43,13 @@ class Bastion
         $policyName = PolicyGenerator::getPolicyName($resource);
         $fullModelName = $resource::getModel();
         $modelName = Str::snake(class_basename($fullModelName));
-        dump("Scanning {$policyName} [$resource => $fullModelName] for permissions...");
+        // dump("Scanning {$policyName} [$resource => $fullModelName] for permissions...");
 
         $methods = array_diff(get_class_methods($policyName), get_class_methods(HandlesAuthorization::class));
         // $permissionNames = collect($methods)->map(fn($method) => Str::snake($method) . '::' . $modelName)->all();
         $permissionNames = collect($methods)->map(fn($method) => Str::snake($method))->all();
 
-        dump($permissionNames);
+        // dump($permissionNames);
 
         foreach ($permissionNames as $permissionName) {
             Permission::create([
@@ -59,12 +59,7 @@ class Bastion
             ]);
         }
 
-        dump(Permission::all()->toArray());
-        // foreach ($permissionNames as $method) {
-        //     dump($method . '::' . $modelName);
-        // }
-
-        // dump($methods);
+        // dump(Permission::all()->toArray());
 
         return true;
     }
