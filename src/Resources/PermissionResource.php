@@ -134,7 +134,8 @@ class PermissionResource extends Resource
             ->filters([
                 SelectFilter::make('resource')
                     ->label(__('bastion::messages.field.resource'))
-                    ->options($resourceOptions),
+                    ->options($resourceOptions)
+                    ->multiple(),
             ])->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),

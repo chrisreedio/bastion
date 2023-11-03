@@ -113,7 +113,8 @@ class PermissionRelationManager extends RelationManager
             ->filters([
                 SelectFilter::make('resource')
                     ->label(__('bastion::messages.field.resource'))
-                    ->options($resourceOptions),
+                    ->options($resourceOptions)
+                    ->multiple(),
             ])
             ->groups($isSuperAdmin ? [] : ['resource', 'display_name'])
             ->defaultGroup('resource')

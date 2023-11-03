@@ -123,21 +123,21 @@ class RoleResource extends Resource
                 TextColumn::make('id')
                     ->label('ID')
                     ->searchable(),
+
                 TextColumn::make('name')
                     ->label(__('bastion::messages.field.name'))
                     ->searchable(),
+
                 TextColumn::make('sso_group')
                     ->label(__('bastion::messages.field.sso_group'))
                     ->visible($sso_enabled)
                     ->sortable()
                     ->searchable(),
+
                 TextColumn::make('permissions_count')
                     ->counts('permissions')
                     ->label(__('bastion::messages.field.permissions_count'))
                     ->color(fn ($record) => $record->name === $superAdminRole ? 'success' : 'info')
-                    // ->formatStateUsing(function ($state, $record) {
-                    //     return $state;
-                    // })
                     ->formatStateUsing(fn ($state, $record) => $record->name === $superAdminRole ? 'Super Admin' : $state)
                     ->badge()
                     ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.roles.isToggledHiddenByDefault', false))
@@ -146,6 +146,7 @@ class RoleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.roles.isToggledHiddenByDefault', true))
                     ->label(__('bastion::messages.field.guard_name'))
                     ->searchable(),
+
                 // Tables\Columns\IconColumn::make('super_admin')
                 //     ->label(__('bastion::messages.field.super_admin'))
                 //     ->boolean()
