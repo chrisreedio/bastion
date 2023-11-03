@@ -3,6 +3,8 @@
 namespace ChrisReedIO\Bastion;
 
 use ChrisReedIO\Bastion\Commands\BastionCommand;
+use ChrisReedIO\Bastion\Commands\BastionGenerate;
+use ChrisReedIO\Bastion\Commands\BastionSyncCommand;
 use ChrisReedIO\Bastion\Testing\TestsBastion;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
@@ -15,6 +17,8 @@ use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+
+use function file_exists;
 
 class BastionServiceProvider extends PackageServiceProvider
 {
@@ -32,15 +36,16 @@ class BastionServiceProvider extends PackageServiceProvider
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
             ->hasInstallCommand(function (InstallCommand $command) {
-                $command->callSilent('vendor:publish', [
-                    '--provider' => 'Spatie\Permission\PermissionServiceProvider',
-                ]);
-                // $command->
-
                 $command
-                    ->publishConfigFile()
-                    ->publishMigrations()
-                    ->askToRunMigrations();
+                    ->startWith(function (InstallCommand $command) {
+                        $command->comment('Publishing Spatie\'s Permission\'s config and migration(s)...');
+                        $command->call('vendor:publish', [
+                            '--provider' => 'Spatie\Permission\PermissionServiceProvider',
+                        ]);
+                    })
+                    // ->publishConfigFile()
+                    ->publishMigrations();
+                // ->askToRunMigrations();
                 // ->askToStarRepoOnGitHub('chrisreedio/bastion');
             });
 
@@ -61,10 +66,17 @@ class BastionServiceProvider extends PackageServiceProvider
         if (file_exists($package->basePath('/../resources/views'))) {
             $package->hasViews(static::$viewNamespace);
         }
+
+        if (file_exists($package->basePath('/../database/seeders'))) {
+            $this->publishes([
+                $package->basePath('/../database/seeders') => database_path('seeders'),
+            ], 'bastion-seeder');
+        }
     }
 
     public function packageRegistered(): void
     {
+        //
     }
 
     public function packageBooted(): void
@@ -90,6 +102,7 @@ class BastionServiceProvider extends PackageServiceProvider
                     $file->getRealPath() => base_path("stubs/bastion/{$file->getFilename()}"),
                 ], 'bastion-stubs');
             }
+
         }
 
         // Testing
@@ -119,7 +132,9 @@ class BastionServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            BastionCommand::class,
+            // BastionCommand::class,
+            // BastionGenerate::class,
+            BastionSyncCommand::class,
         ];
     }
 
@@ -153,6 +168,8 @@ class BastionServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
+            'modify_permissions_table_add_resource_column',
+            'modify_permissions_table_add_display_name_column',
             'modify_roles_table_add_sso_group_column',
         ];
     }

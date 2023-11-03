@@ -7,7 +7,9 @@
 
 
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Bastion is a package/plugin for Filament and Laravel to quickly scaffold out access control for your application.
+
+It's primary use case is with SSO and Azure Active Directory, but it can be used with any authentication provider.
 
 ## Installation
 
@@ -15,6 +17,16 @@ You can install the package via composer:
 
 ```bash
 composer require chrisreedio/bastion
+```
+
+Update your PanelProvider to include the plugin:
+
+```php
+$panel
+    ->plugins([
+        // ... Other Plugins
+        \ChrisReedIO\Bastion\BastionPlugin::make(),
+    ])
 ```
 
 You can publish and run the migrations with:
@@ -40,14 +52,49 @@ This is the contents of the published config file:
 
 ```php
 return [
+    'models' => [
+        'permission' => \Spatie\Permission\Models\Permission::class,
+        'role' => \Spatie\Permission\Models\Role::class,
+        'user' => '\App\Models\User',
+    ],
+
+    'permissions' => [
+        'preload' => true,
+
+    ],
+
+    'default_guard' => 'web',
+    'guards' => [
+        // value => 'Custom Label'
+        'web' => 'Web',
+        'api' => 'API',
+        // Your other custom guards here
+    ],
+
+    'sso' => [
+        'enabled' => false,
+    ],
 ];
 ```
 
+You can publish the seeder(s) with:
+
+```bash
+php artisan vendor:publish --tag="bastion-seeders"
+```
+
+
 ## Usage
 
+A super admin role may be defined by using the `->superAdminRole` method on the plugin.
+
 ```php
-$bastion = new ChrisReedIO\Bastion();
-echo $bastion->echoPhrase('Hello, ChrisReedIO!');
+$panel
+    ->plugins([
+        // ... Other Plugins
+        \ChrisReedIO\Bastion\BastionPlugin::make()
+            ->superAdminRole('Developer'),
+	])
 ```
 
 ## Testing
@@ -69,6 +116,9 @@ Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
+
+Special thanks to @Althinect and @bezhanSalleh for their packages and hard work. 
+This is both inspired by and based on their work. This package would not be possible without them.
 
 - [Chris Reed](https://github.com/chrisreedio)
 - [All Contributors](../../contributors)

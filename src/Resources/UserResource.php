@@ -1,22 +1,40 @@
 <?php
 
-namespace ChrisReedIO\Bastion\Resources\Security;
+namespace ChrisReedIO\Bastion\Resources;
 
-use App\Models\User;
-use ChrisReedIO\Bastion\Resources\Security\UserResource\Pages;
+use ChrisReedIO\Bastion\Resources\UserResource\Pages;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
+use function __;
+use function config;
+
 class UserResource extends Resource
 {
-    protected static ?string $model = User::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
-    protected static ?string $navigationGroup = 'Security';
+    public static function getModel(): string
+    {
+        return config('bastion.models.user');
+    }
+
+    public static function getLabel(): string
+    {
+        return __('bastion::messages.section.user');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __(config('bastion.navigation_section_group', 'bastion::messages.navigation_group'));
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('bastion::messages.section.users');
+    }
 
     public static function form(Form $form): Form
     {
@@ -49,6 +67,7 @@ class UserResource extends Resource
                 //     ->dateTime()
                 //     ->sortable(),
                 Tables\Columns\TextColumn::make('roles.name')
+                    ->placeholder('No Roles')
                     ->listWithLineBreaks()
                     ->badge(),
                 Tables\Columns\TextColumn::make('created_at')
