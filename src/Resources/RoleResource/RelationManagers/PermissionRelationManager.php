@@ -3,6 +3,7 @@
 namespace ChrisReedIO\Bastion\Resources\RoleResource\RelationManagers;
 
 use ChrisReedIO\Bastion\BastionPlugin;
+use ChrisReedIO\Bastion\Enums\DefaultPermissions;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -17,7 +18,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Spatie\Permission\PermissionRegistrar;
-
 use function __;
 use function collect;
 use function explode;
@@ -33,7 +33,7 @@ class PermissionRelationManager extends RelationManager
      */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('bastion::messages.section.permissions') ?? (string) str(static::getRelationshipName())
+        return __('bastion::messages.section.permissions') ?? (string)str(static::getRelationshipName())
             ->kebab()
             ->replace('-', ' ')
             ->headline();
@@ -66,17 +66,13 @@ class PermissionRelationManager extends RelationManager
         // dd($superAdminRole);
         $isSuperAdmin = $this->getOwnerRecord()->name === $superAdminRole;
         $resources = Filament::getResources();
-        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => $resource::getLabel() ?? $resource])->all();
+        $resourceOptions = collect($resources)->mapWithKeys(fn($resource) => [$resource => Str::title($resource::getModelLabel()) ?? $resource])->all();
 
         // dd($resourceOptions);
         return $table
             // Support changing table heading by translations.
             ->heading(__('bastion::messages.section.permissions'))
             ->columns([
-                TextColumn::make('name')
-                    ->searchable()
-                    ->label(__('bastion::messages.field.full_name'))
-                    ->color('gray'),
                 TextColumn::make('display_name')
                     ->label(__('bastion::messages.field.short_name'))
                     ->badge()
@@ -94,12 +90,14 @@ class PermissionRelationManager extends RelationManager
                     ->label(__('bastion::messages.field.resource'))
                     ->formatStateUsing(function (string $state): string {
                         if (Str::startsWith($state, 'App')) {
-                            return Str::remove('App\\Filament\\Resources\\', $state);
+                            // return Str::remove('App\\Filament\\Resources\\', $state);
+                            // return Str::remove('App\\Filament\\Resources\\', $state);
+                            return Str::title($state::getModelLabel());
                         }
 
                         return $state;
                     })
-                    ->color(fn ($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
+                    ->color(fn($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
                     ->badge()
                     ->sortable()
                     ->searchable(),
@@ -109,19 +107,28 @@ class PermissionRelationManager extends RelationManager
                     ->label(__('bastion::messages.field.guard_name'))
                     ->badge()
                     ->color('info'),
+
+                TextColumn::make('name')
+                    ->searchable()
+                    ->label(__('bastion::messages.field.full_name'))
+                    ->color('gray'),
             ])
             ->filters([
                 SelectFilter::make('resource')
                     ->label(__('bastion::messages.field.resource'))
                     ->options($resourceOptions)
                     ->multiple(),
+                SelectFilter::make('display_name')
+                    ->label(__('bastion::messages.field.short_name'))
+                    ->options(DefaultPermissions::class)
+                    ->multiple(),
             ])
             ->groups($isSuperAdmin ? [] : ['resource', 'display_name'])
             ->defaultGroup('resource')
-            ->emptyStateHeading(fn () => $isSuperAdmin
+            ->emptyStateHeading(fn() => $isSuperAdmin
                 ? __('bastion::messages.table.empty.permissions_super_admin')
                 : __('bastion::messages.table.empty.permissions'))
-            ->emptyStateIcon(fn () => $isSuperAdmin ? 'heroicon-o-shield-check' : 'heroicon-o-x-mark')
+            ->emptyStateIcon(fn() => $isSuperAdmin ? 'heroicon-o-shield-check' : 'heroicon-o-x-mark')
             ->headerActions([
                 AttachAction::make('Attach Permission')
                     ->preloadRecordSelect()
@@ -132,11 +139,11 @@ class PermissionRelationManager extends RelationManager
                     //     ->make(PermissionRegistrar::class)
                     //     ->forgetCachedPermissions()
                     // )
-                    ->visible(fn ($record) => ! $isSuperAdmin),
+                    ->visible(fn($record) => !$isSuperAdmin),
             ])->actions([
-                DetachAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+                DetachAction::make()->after(fn() => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
             ])->bulkActions([
-                DetachBulkAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+                DetachBulkAction::make()->after(fn() => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
             ]);
     }
 }

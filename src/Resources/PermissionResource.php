@@ -2,6 +2,7 @@
 
 namespace ChrisReedIO\Bastion\Resources;
 
+use ChrisReedIO\Bastion\Enums\DefaultPermissions;
 use ChrisReedIO\Bastion\Resources\PermissionResource\Pages;
 use ChrisReedIO\Bastion\Resources\PermissionResource\RelationManagers;
 use Filament\Facades\Filament;
@@ -91,7 +92,7 @@ class PermissionResource extends Resource
     public static function table(Table $table): Table
     {
         $resources = Filament::getResources();
-        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => $resource::getLabel() ?? $resource])->all();
+        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => Str::title($resource::getModelLabel()) ?? $resource])->all();
 
         return $table
             ->columns([
@@ -123,6 +124,13 @@ class PermissionResource extends Resource
                     ->badge()
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('roles.name')
+                    ->label(__('bastion::messages.field.roles'))
+                    // ->formatStateUsing(function (string $state): string {
+                    //     return Str::remove('App\\Filament\\Resources\\', $state);
+                    // })
+                    // ->color(fn ($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
+                    ->badge(),
                 TextColumn::make('guard_name')
                     ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.permissions.isToggledHiddenByDefault', true))
                     ->label(__('bastion::messages.field.guard_name'))
@@ -135,6 +143,10 @@ class PermissionResource extends Resource
                 SelectFilter::make('resource')
                     ->label(__('bastion::messages.field.resource'))
                     ->options($resourceOptions)
+                    ->multiple(),
+                SelectFilter::make('display_name')
+                    ->label(__('bastion::messages.field.short_name'))
+                    ->options(DefaultPermissions::class)
                     ->multiple(),
             ])->actions([
                 Tables\Actions\EditAction::make(),

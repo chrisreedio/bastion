@@ -9,14 +9,33 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Spatie\Permission\Models\Permission;
+use function __;
+use function config;
 
 class UserResource extends Resource
 {
-    protected static ?string $model = User::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
-    protected static ?string $navigationGroup = 'Security';
+    public static function getModel(): string
+    {
+        return config('bastion.models.user');
+    }
+
+    public static function getLabel(): string
+    {
+        return __('bastion::messages.section.user');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __(config('bastion.navigation_section_group', 'bastion::messages.navigation_group'));
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('bastion::messages.section.users');
+    }
 
     public static function form(Form $form): Form
     {

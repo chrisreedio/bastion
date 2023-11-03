@@ -140,8 +140,12 @@ class RoleResource extends Resource
                     ->color(fn ($record) => $record->name === $superAdminRole ? 'success' : 'info')
                     ->formatStateUsing(fn ($state, $record) => $record->name === $superAdminRole ? 'Super Admin' : $state)
                     ->badge()
-                    ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.roles.isToggledHiddenByDefault', false))
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.roles.isToggledHiddenByDefault', false)),
+                Tables\Columns\TextColumn::make('users_count')
+                    ->label(__('bastion::messages.field.users_count'))
+                    ->counts('users')
+                    ->badge(),
+
                 TextColumn::make('guard_name')
                     ->toggleable(isToggledHiddenByDefault: config('bastion.toggleable_guard_names.roles.isToggledHiddenByDefault', true))
                     ->label(__('bastion::messages.field.guard_name'))

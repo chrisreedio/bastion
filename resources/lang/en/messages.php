@@ -9,6 +9,7 @@ return [
         'permissions' => 'Permissions',
         'role' => 'Role',
         'roles' => 'Roles',
+        'user' => 'User',
         'users' => 'Users',
     ],
 
@@ -26,6 +27,8 @@ return [
         'super_admin' => 'Super Admin',
         'email' => 'Email',
         'permissions_count' => 'Permissions Count',
+        'users_count' => 'Users Count',
+        'roles_count' => 'Roles Count',
         'super_admin-hint' => 'Super Admins have all permissions and cannot be edited or deleted.',
         'resource' => 'Resource',
         'guard_name' => 'Guard Name',
