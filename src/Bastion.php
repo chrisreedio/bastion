@@ -29,7 +29,7 @@ class Bastion
 
         // For each resource, generate a policy
         foreach ($resources as $resource) {
-            dump("Generating policy for {$resource}...");
+            // dump("Generating policy for {$resource}...");
             PolicyGenerator::generate($resource);
 
             self::syncResource($resource);
