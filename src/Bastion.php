@@ -13,7 +13,6 @@ use Spatie\Permission\Models\Permission;
 use function array_diff;
 use function class_basename;
 use function collect;
-use function dump;
 use function get_class_methods;
 
 class Bastion
