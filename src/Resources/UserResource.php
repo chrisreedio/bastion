@@ -2,14 +2,13 @@
 
 namespace ChrisReedIO\Bastion\Resources;
 
-use App\Models\User;
 use ChrisReedIO\Bastion\Resources\UserResource\Pages;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Spatie\Permission\Models\Permission;
+
 use function __;
 use function config;
 
