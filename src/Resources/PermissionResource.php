@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+
 use function __;
 use function class_basename;
 use function collect;
@@ -57,7 +58,7 @@ class PermissionResource extends Resource
     public static function form(Form $form): Form
     {
         $resources = collect(Filament::getResources())
-            ->mapWithKeys(fn($resource) => [
+            ->mapWithKeys(fn ($resource) => [
                 $resource => Str::remove('Resource', class_basename($resource)),
             ])->all();
 
@@ -90,7 +91,7 @@ class PermissionResource extends Resource
     public static function table(Table $table): Table
     {
         $resources = Filament::getResources();
-        $resourceOptions = collect($resources)->mapWithKeys(fn($resource) => [$resource => Str::title($resource::getModelLabel())])->all();
+        $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => Str::title($resource::getModelLabel())])->all();
 
         return $table
             ->columns([
@@ -118,7 +119,7 @@ class PermissionResource extends Resource
 
                         return $state;
                     })
-                    ->color(fn($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
+                    ->color(fn ($state) => Str::startsWith($state, 'App') ? 'info' : 'warning')
                     ->badge()
                     ->sortable()
                     ->searchable(),

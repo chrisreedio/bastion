@@ -23,10 +23,10 @@ class UserRelationManager extends RelationManager
      */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('bastion::messages.section.users');// ?? (string) str(static::getRelationshipName())
-            // ->kebab()
-            // ->replace('-', ' ')
-            // ->headline();
+        return __('bastion::messages.section.users'); // ?? (string) str(static::getRelationshipName())
+        // ->kebab()
+        // ->replace('-', ' ')
+        // ->headline();
     }
 
     protected static function getModelLabel(): string

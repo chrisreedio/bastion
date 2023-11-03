@@ -34,10 +34,10 @@ class PermissionRelationManager extends RelationManager
      */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return __('bastion::messages.section.permissions');// ?? (string) str(static::getRelationshipName())
-            // ->kebab()
-            // ->replace('-', ' ')
-            // ->headline();
+        return __('bastion::messages.section.permissions'); // ?? (string) str(static::getRelationshipName())
+        // ->kebab()
+        // ->replace('-', ' ')
+        // ->headline();
     }
 
     protected static function getModelLabel(): string
