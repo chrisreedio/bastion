@@ -22,7 +22,7 @@ class Bastion
     {
         // Figure out what resources exist
         $resources = Filament::getResources();
-        dump($resources);
+        // dump($resources);
 
         // TODO! Remove me!
         Permission::truncate();
@@ -51,7 +51,7 @@ class Bastion
         // dump($permissionNames);
 
         foreach ($permissionNames as $permissionName) {
-            Permission::create([
+            Permission::firstOrCreate([
                 'display_name' => $permissionName,
                 'name' => $permissionName . '::' . $modelName,
                 'resource' => $resource,
