@@ -13,7 +13,7 @@ return [
 
     ],
 
-    'default_guard' => 'sanctum',
+    'default_guard' => 'web',
     'guards' => [
         // value => 'Custom Label'
         'web' => 'Web',
