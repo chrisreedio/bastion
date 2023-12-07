@@ -45,12 +45,6 @@ You can publish the config file with:
 php artisan vendor:publish --tag="bastion-config"
 ```
 
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="bastion-views"
-```
-
 This is the contents of the published config file:
 
 ```php
@@ -86,6 +80,11 @@ You can publish the seeder(s) with:
 php artisan vendor:publish --tag="bastion-seeders"
 ```
 
+Optionally, you can publish the views using
+
+```bash
+php artisan vendor:publish --tag="bastion-views"
+```
 
 ## Usage
 

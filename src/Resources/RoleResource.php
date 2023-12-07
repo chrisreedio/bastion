@@ -14,9 +14,12 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
+use function array_flip;
 use function config;
+use function ucwords;
 
 class RoleResource extends Resource
 {
@@ -55,6 +58,13 @@ class RoleResource extends Resource
         $sso_enabled = $plugin->getSsoEnabled();
         $superAdminRole = $plugin->getSuperAdminRole();
 
+        // Get a list of all guards in the app
+        $configuredGuards = array_keys(config('auth.guards'));
+        $configuredGuards = collect($configuredGuards)
+            ->mapWithKeys(fn ($guard) => [$guard => ucwords($guard)])
+            ->all();
+        $defaultGuard = config('bastion.default_guard');
+
         return $form
             ->schema([
                 Section::make()
@@ -66,8 +76,10 @@ class RoleResource extends Resource
 
                         Select::make('guard_name')
                             ->label(__('bastion::messages.field.guard_name'))
-                            ->options(config('bastion.guards'))
-                            ->default(config('bastion.default_guard'))
+                            // ->options(config('bastion.guards'))
+                            ->options($configuredGuards)
+                            ->default($defaultGuard)
+                            ->selectablePlaceholder(false)
                             ->required(),
 
                         TextInput::make('sso_group')
@@ -132,6 +144,8 @@ class RoleResource extends Resource
                     ->label(__('bastion::messages.field.sso_group'))
                     ->visible($sso_enabled)
                     ->sortable()
+                    ->badge()
+                    ->copyable()
                     ->searchable(),
 
                 TextColumn::make('permissions_count')
