@@ -63,7 +63,7 @@ class Bastion
         return true;
     }
 
-    public static function getResourcePermissions(string $resource, array $permissions = null): Collection
+    public static function getResourcePermissions(string $resource, ?array $permissions = null): Collection
     {
         /** @phpstan-ignore-next-line  */
         $permissionQuery = Permission::query()->where('resource', $resource);
