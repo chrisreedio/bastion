@@ -47,7 +47,7 @@ class BastionPlugin implements Plugin
         return $plugin;
     }
 
-    public function superAdminRole(string | Closure $role = null): static
+    public function superAdminRole(string | Closure | null $role = null): static
     {
         if ($role instanceof Closure) {
             $role = $role();
