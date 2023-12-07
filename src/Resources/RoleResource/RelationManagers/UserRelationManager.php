@@ -71,7 +71,7 @@ class UserRelationManager extends RelationManager
             ])->actions($sso_enabled ? [] : [
                 DetachAction::make(),
             ])->bulkActions([
-
+                //
             ]);
     }
 }
