@@ -23,5 +23,6 @@ return [
 
     'sso' => [
         'enabled' => false,
+        'role_prefix' => env('SSO_ROLE_PREFIX', 'SSO-'),
     ],
 ];
