@@ -25,4 +25,11 @@ return [
         'enabled' => false,
         'role_prefix' => env('SSO_ROLE_PREFIX', 'SSO-'),
     ],
+
+    'resources' => [
+        // Set to null to disable
+        'user' => \ChrisReedIO\Bastion\Resources\UserResource::class,
+        'role' => \ChrisReedIO\Bastion\Resources\RoleResource::class,
+        'permission' => \ChrisReedIO\Bastion\Resources\PermissionResource::class,
+    ],
 ];
