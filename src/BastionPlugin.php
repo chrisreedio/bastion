@@ -7,6 +7,9 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Illuminate\Support\Facades\Gate;
 
+use function config;
+use function is_null;
+
 class BastionPlugin implements Plugin
 {
     protected ?string $superAdminRole = null;
@@ -18,11 +21,14 @@ class BastionPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        $panel->resources([
-            Resources\UserResource::class,
-            Resources\RoleResource::class,
-            Resources\PermissionResource::class,
-        ]);
+        // Register our resources
+        $resources = config('bastion.resources');
+        foreach ($resources as $name => $resource) {
+            if (is_null($resource)) {
+                continue;
+            }
+            $panel->resources([$resource]);
+        }
     }
 
     public function boot(Panel $panel): void
