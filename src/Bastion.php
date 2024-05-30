@@ -39,6 +39,14 @@ class Bastion
     {
         // Scan this policy for permissions to generate / sync
         $policyName = PolicyGenerator::getPolicyName($resource);
+
+        // Check for the existence of a getParentResource method on the resource
+        // TODO: If it exists, we need to get the parent resource and sync it first
+        // For now, we're just going to skip it to let that parent resource sync itself
+        if (method_exists($resource, 'getParentResource')) {
+            return false;
+        }
+
         $fullModelName = $resource::getModel();
         $modelName = Str::snake(class_basename($fullModelName));
         // dump("Scanning {$policyName} [$resource => $fullModelName] for permissions...");
@@ -50,10 +58,10 @@ class Bastion
         // dump($permissionNames);
 
         foreach ($permissionNames as $permissionName) {
-            /** @phpstan-ignore-next-line  */
             Permission::firstOrCreate([
-                'display_name' => $permissionName,
                 'name' => $permissionName . '::' . $modelName,
+            ], [
+                'display_name' => $permissionName,
                 'resource' => $resource,
             ]);
         }
@@ -65,7 +73,7 @@ class Bastion
 
     public static function getResourcePermissions(string $resource, ?array $permissions = null): Collection
     {
-        /** @phpstan-ignore-next-line  */
+        /** @phpstan-ignore-next-line */
         $permissionQuery = Permission::query()->where('resource', $resource);
         // If we have any permissions, filter by them
         // Each permission is the prefix of the name of the permission
