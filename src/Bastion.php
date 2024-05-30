@@ -58,7 +58,6 @@ class Bastion
         // dump($permissionNames);
 
         foreach ($permissionNames as $permissionName) {
-            /** @phpstan-ignore-next-line */
             Permission::firstOrCreate([
                 'name' => $permissionName . '::' . $modelName,
             ], [
