@@ -106,7 +106,7 @@ class BastionServiceProvider extends PackageServiceProvider
         }
 
         // Testing
-        Testable::mixin(new TestsBastion());
+        Testable::mixin(new TestsBastion);
     }
 
     protected function getAssetPackageName(): ?string
