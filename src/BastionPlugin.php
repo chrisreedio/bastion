@@ -84,7 +84,9 @@ class BastionPlugin implements Plugin
 
     public function getSsoEnabled(): bool
     {
-        return config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class,
-                false);
+        return config('bastion.sso.enabled', false) || class_exists(
+            \ChrisReedIO\Socialment\SocialmentPlugin::class,
+            false
+        );
     }
 }
