@@ -14,6 +14,8 @@ class BastionPlugin implements Plugin
 {
     protected ?string $superAdminRole = null;
 
+    protected bool $registerResources = true;
+
     public function getId(): string
     {
         return 'bastion';
@@ -21,13 +23,15 @@ class BastionPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        // Register our resources
-        $resources = config('bastion.resources');
-        foreach ($resources as $name => $resource) {
-            if (is_null($resource)) {
-                continue;
+        if ($this->registerResources) {
+            // Register our resources
+            $resources = config('bastion.resources');
+            foreach ($resources as $name => $resource) {
+                if (is_null($resource)) {
+                    continue;
+                }
+                $panel->resources([$resource]);
             }
-            $panel->resources([$resource]);
         }
     }
 
@@ -63,6 +67,16 @@ class BastionPlugin implements Plugin
         return $this;
     }
 
+    public function registerResources(bool | Closure $registerResources = true): static
+    {
+        if ($registerResources instanceof Closure) {
+            $registerResources = $registerResources();
+        }
+        $this->registerResources = $registerResources;
+
+        return $this;
+    }
+
     public function getSuperAdminRole(): ?string
     {
         return $this->superAdminRole;
@@ -70,6 +84,7 @@ class BastionPlugin implements Plugin
 
     public function getSsoEnabled(): bool
     {
-        return config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class, false);
+        return config('bastion.sso.enabled', false) || class_exists(\ChrisReedIO\Socialment\SocialmentPlugin::class,
+                false);
     }
 }
