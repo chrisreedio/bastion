@@ -3,8 +3,8 @@
 namespace ChrisReedIO\Bastion\Resources\PermissionResource\RelationManagers;
 
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -24,7 +24,7 @@ class RoleRelationManager extends RelationManager
         return __('bastion::messages.section.roles');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([

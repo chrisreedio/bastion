@@ -2,17 +2,17 @@
 
 namespace ChrisReedIO\Bastion\Resources;
 
+use BackedEnum;
 use ChrisReedIO\Bastion\Enums\DefaultPermissions;
 use ChrisReedIO\Bastion\Resources\PermissionResource\Pages;
 use ChrisReedIO\Bastion\Resources\PermissionResource\RelationManagers;
+use Filament\Actions;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\BulkAction;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -28,7 +28,7 @@ use function explode;
 
 class PermissionResource extends Resource
 {
-    protected static ?string $navigationIcon = 'heroicon-o-lock-closed';
+    protected static BackedEnum | string | null $navigationIcon = 'heroicon-o-lock-closed';
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -55,7 +55,7 @@ class PermissionResource extends Resource
         return __('bastion::messages.section.permissions');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         $resources = collect(Filament::getResources())
             ->mapWithKeys(fn ($resource) => [
@@ -147,15 +147,15 @@ class PermissionResource extends Resource
                     ->label(__('bastion::messages.field.short_name'))
                     ->options(DefaultPermissions::class)
                     ->multiple(),
-            ])->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+            ])->recordActions([
+                Actions\EditAction::make(),
+                Actions\ViewAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->headerActions([
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
-                BulkAction::make('Attach Role')
+                Actions\BulkAction::make('Attach Role')
                     ->action(function (Collection $records, array $data): void {
                         /** @var Permission $record */
                         foreach ($records as $record) {
@@ -163,7 +163,7 @@ class PermissionResource extends Resource
                             $record->save();
                         }
                     })
-                    ->form([
+                    ->schema([
                         Select::make('role')
                             ->label(__('bastion::messages.field.role'))
                             ->options(Role::query()->pluck('name', 'id'))
@@ -171,7 +171,7 @@ class PermissionResource extends Resource
                     ])->deselectRecordsAfterCompletion(),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                Actions\CreateAction::make(),
             ]);
     }
 

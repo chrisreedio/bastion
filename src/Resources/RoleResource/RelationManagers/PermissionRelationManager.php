@@ -4,14 +4,12 @@ namespace ChrisReedIO\Bastion\Resources\RoleResource\RelationManagers;
 
 use ChrisReedIO\Bastion\BastionPlugin;
 use ChrisReedIO\Bastion\Enums\DefaultPermissions;
+use Filament\Actions;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Actions\AttachAction;
-use Filament\Tables\Actions\DetachAction;
-use Filament\Tables\Actions\DetachBulkAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -50,7 +48,7 @@ class PermissionRelationManager extends RelationManager
         return __('bastion::messages.section.permissions');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([
@@ -130,8 +128,11 @@ class PermissionRelationManager extends RelationManager
                 ? __('bastion::messages.table.empty.permissions_super_admin')
                 : __('bastion::messages.table.empty.permissions'))
             ->emptyStateIcon(fn () => $isSuperAdmin ? 'heroicon-o-shield-check' : 'heroicon-o-x-mark')
+            ->recordActions([
+                Actions\DetachAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+            ])
             ->headerActions([
-                AttachAction::make('Attach Permission')
+                Actions\AttachAction::make('Attach Permission')
                     ->preloadRecordSelect()
                     ->recordSelect(function (Select $select) {
                         return $select->multiple();
@@ -141,10 +142,9 @@ class PermissionRelationManager extends RelationManager
                     //     ->forgetCachedPermissions()
                     // )
                     ->visible(fn ($record) => ! $isSuperAdmin),
-            ])->actions([
-                DetachAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
-            ])->bulkActions([
-                DetachBulkAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+                Actions\BulkActionGroup::make([
+                    Actions\DetachBulkAction::make()->after(fn () => app()->make(PermissionRegistrar::class)->forgetCachedPermissions()),
+                ]),
             ]);
     }
 }

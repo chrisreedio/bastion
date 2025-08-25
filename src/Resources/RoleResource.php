@@ -2,15 +2,17 @@
 
 namespace ChrisReedIO\Bastion\Resources;
 
+use BackedEnum;
 use ChrisReedIO\Bastion\BastionPlugin;
 use ChrisReedIO\Bastion\Resources\RoleResource\Pages;
 use ChrisReedIO\Bastion\Resources\RoleResource\RelationManagers;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
+use Filament\Actions;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -23,7 +25,7 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static BackedEnum | string | null $navigationIcon = 'heroicon-o-user-group';
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -50,7 +52,7 @@ class RoleResource extends Resource
         return __('bastion::messages.section.roles');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         $plugin = BastionPlugin::get();
         $sso_enabled = $plugin->getSsoEnabled();
@@ -84,12 +86,12 @@ class RoleResource extends Resource
                             ->label(__('bastion::messages.field.sso_group'))
                             ->visible($sso_enabled),
 
-                        Placeholder::make('super_admin')
+                        TextEntry::make('super_admin')
                             ->label(__('bastion::messages.field.super_admin'))
                             ->hintIcon('heroicon-o-shield-check')
                             // ->hint(__('bastion::messages.field.super_admin-hint'))
                             ->hintColor('info')
-                            ->content(__('bastion::messages.field.super_admin-hint'))
+                            ->state(__('bastion::messages.field.super_admin-hint'))
                             ->columnSpan(['sm' => 1, 'lg' => 3])
                             ->visible(fn ($record) => $record?->name === $superAdminRole),
 
@@ -169,17 +171,17 @@ class RoleResource extends Resource
                 //     ->default(fn($record) => $record->name === $superAdminRole),
             ])
             ->filters([])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                Actions\EditAction::make(),
+                Actions\ViewAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->headerActions([
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                Actions\CreateAction::make(),
             ]);
     }
 

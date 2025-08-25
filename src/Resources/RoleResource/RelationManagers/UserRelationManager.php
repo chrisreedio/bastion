@@ -3,11 +3,10 @@
 namespace ChrisReedIO\Bastion\Resources\RoleResource\RelationManagers;
 
 use ChrisReedIO\Bastion\BastionPlugin;
+use Filament\Actions;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Actions\AttachAction;
-use Filament\Tables\Actions\DetachAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -39,7 +38,7 @@ class UserRelationManager extends RelationManager
         return __('bastion::messages.section.users');
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([
@@ -67,10 +66,10 @@ class UserRelationManager extends RelationManager
                     ->searchable(),
             ])
             ->filters([])->headerActions($sso_enabled ? [] : [
-                AttachAction::make(),
-            ])->actions($sso_enabled ? [] : [
-                DetachAction::make(),
-            ])->bulkActions([
+                Actions\AttachAction::make(),
+            ])->recordActions($sso_enabled ? [] : [
+                Actions\DetachAction::make(),
+            ])->headerActions([
                 //
             ]);
     }

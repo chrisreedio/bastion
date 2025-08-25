@@ -2,10 +2,12 @@
 
 namespace ChrisReedIO\Bastion\Resources;
 
+use BackedEnum;
 use ChrisReedIO\Bastion\Resources\UserResource\Pages;
+use Filament\Actions;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -14,7 +16,7 @@ use function config;
 
 class UserResource extends Resource
 {
-    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static BackedEnum | string | null $navigationIcon = 'heroicon-o-user';
 
     public static function getModel(): string
     {
@@ -36,7 +38,7 @@ class UserResource extends Resource
         return __('bastion::messages.section.users');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([
@@ -82,12 +84,12 @@ class UserResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 // Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->headerActions([
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
