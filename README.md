@@ -1,8 +1,8 @@
 # SSO Powered Access Control for Filament
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/chrisreedio/bastion.svg?style=flat-square)](https://packagist.org/packages/chrisreedio/bastion)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/chrisreedio/bastion/run-tests.yml?branch=3.x&label=tests&style=flat-square)](https://github.com/chrisreedio/bastion/actions?query=workflow%3Arun-tests+branch%3A3.x)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/chrisreedio/bastion/fix-php-code-styling.yml?branch=3.x&label=code%20style&style=flat-square)](https://github.com/chrisreedio/bastion/actions?query=workflow%3A"Fix+PHP+Code+Styling"+branch%3A3.x)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/chrisreedio/bastion/run-tests.yml?branch=4.x&label=tests&style=flat-square)](https://github.com/chrisreedio/bastion/actions?query=workflow%3Arun-tests+branch%3A4.x)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/chrisreedio/bastion/fix-php-code-styling.yml?branch=4.x&label=code%20style&style=flat-square)](https://github.com/chrisreedio/bastion/actions?query=workflow%3A"Fix+PHP+Code+Styling"+branch%3A4.x)
 [![Total Downloads](https://img.shields.io/packagist/dt/chrisreedio/bastion.svg?style=flat-square)](https://packagist.org/packages/chrisreedio/bastion)
 
 
