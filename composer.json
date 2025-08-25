@@ -28,9 +28,9 @@
         "spatie/laravel-permission": "^6.0"
     },
     "require-dev": {
+        "larastan/larastan": "^2.11",
         "laravel/pint": "^1.13",
         "nunomaduro/collision": "^7.10|^8.0",
-        "nunomaduro/larastan": "^2.1.1",
         "orchestra/testbench": "^v8.22|^9.0",
         "pestphp/pest": "^2.0",
         "pestphp/pest-plugin-arch": "^2.0",
