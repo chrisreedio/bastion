@@ -23,9 +23,6 @@ class Bastion
         $resources = Filament::getResources();
         // dump($resources);
 
-        // TODO! Remove me!
-        Permission::truncate();
-
         // For each resource, generate a policy
         foreach ($resources as $resource) {
             // dump("Generating policy for {$resource}...");
