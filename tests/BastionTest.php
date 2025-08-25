@@ -1,13 +1,12 @@
 <?php
 
-use ChrisReedIO\Bastion\Bastion;
 use ChrisReedIO\Bastion\Enums\DefaultPermissions;
 use Spatie\Permission\Models\Permission;
 
 test('sync creates permissions for resources', function () {
     // This is a complex test that would require too much mocking
     // Let's create a simpler integration test
-    
+
     // Create a simple permission to test the database setup works
     $permission = Permission::create([
         'name' => 'test_permission',
@@ -43,14 +42,14 @@ test('resource permissions can be filtered', function () {
         'display_name' => 'view_any',
         'resource' => 'App\\Filament\\Resources\\UserResource',
     ]);
-    
+
     Permission::create([
         'name' => 'view::user',
         'guard_name' => 'web',
         'display_name' => 'view',
         'resource' => 'App\\Filament\\Resources\\UserResource',
     ]);
-    
+
     Permission::create([
         'name' => 'create::user',
         'guard_name' => 'web',
@@ -79,7 +78,7 @@ test('resource permissions can be filtered using enum', function () {
         'display_name' => 'view_any',
         'resource' => 'App\\Filament\\Resources\\UserResource',
     ]);
-    
+
     Permission::create([
         'name' => 'create::user',
         'guard_name' => 'web',
@@ -100,7 +99,7 @@ test('get resource permissions without filter returns all permissions for resour
         'display_name' => 'view_any',
         'resource' => 'App\\Filament\\Resources\\UserResource',
     ]);
-    
+
     Permission::create([
         'name' => 'view_any::post',
         'guard_name' => 'web',
@@ -117,7 +116,7 @@ test('get resource permissions without filter returns all permissions for resour
 test('child resources are handled correctly', function () {
     // Test the method_exists check directly
     $hasParentMethod = method_exists('App\\Filament\\Resources\\CommentResource', 'getParentResource');
-    
+
     // Since the class doesn't exist, this should be false
     expect($hasParentMethod)->toBeFalse();
 });
