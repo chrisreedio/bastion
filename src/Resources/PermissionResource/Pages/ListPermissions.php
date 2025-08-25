@@ -4,11 +4,11 @@ namespace ChrisReedIO\Bastion\Resources\PermissionResource\Pages;
 
 use ChrisReedIO\Bastion\Bastion;
 use ChrisReedIO\Bastion\Resources\PermissionResource;
+use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Permission;
 
@@ -33,7 +33,7 @@ class ListPermissions extends ListRecords
         $roleModel = config('permission.models.role');
 
         return [
-            BulkAction::make('Attach Role')
+            Actions\BulkAction::make('Attach Role')
                 ->action(function (Collection $records, array $data): void {
                     /** @var Permission $record */
                     foreach ($records as $record) {
@@ -41,7 +41,7 @@ class ListPermissions extends ListRecords
                         $record->save();
                     }
                 })
-                ->form([
+                ->schema([
                     Select::make('role')
                         ->label(__('bastion::messages.field.role'))
                         ->options($roleModel::query()->pluck('name', 'id'))
