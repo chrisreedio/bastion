@@ -21,7 +21,7 @@ class Bastion
     public static function sync(Panel | string | null $panel = null)
     {
 
-        if ($panel instanceof string) {
+        if (is_string($panel)) {
             $panel = Filament::getPanel($panel);
         } elseif ($panel === null) {
             $panel = Filament::getPanel();
