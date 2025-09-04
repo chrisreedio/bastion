@@ -40,7 +40,7 @@ class Bastion
         // Check for the existence of a getParentResource method on the resource
         // TODO: If it exists, we need to get the parent resource and sync it first
         // For now, we're just going to skip it to let that parent resource sync itself
-        if (method_exists($resource, 'getParentResource')) {
+        if (method_exists($resource, 'getParentResource') && $resource::getParentResource() !== null) {
             return false;
         }
 
