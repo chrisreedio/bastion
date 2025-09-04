@@ -5,6 +5,7 @@ namespace ChrisReedIO\Bastion;
 use ChrisReedIO\Bastion\Enums\DefaultPermissions;
 use ChrisReedIO\PolicyGenerator\PolicyGenerator;
 use Filament\Facades\Filament;
+use Filament\Panel;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -17,10 +18,17 @@ use function get_class_methods;
 
 class Bastion
 {
-    public static function sync()
+    public static function sync(Panel | string | null $panel = null)
     {
+
+        if (is_string($panel)) {
+            $panel = Filament::getPanel($panel);
+        } elseif ($panel === null) {
+            $panel = Filament::getPanel();
+        }
+
         // Figure out what resources exist
-        $resources = Filament::getResources();
+        $resources = $panel->getResources();
         // dump($resources);
 
         // For each resource, generate a policy
