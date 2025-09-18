@@ -90,7 +90,16 @@ class PermissionResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $resources = Filament::getResources();
+        // Get all resources for all panels
+        $panels = Filament::getPanels();
+        $resources = [];
+        foreach ($panels as $panel) {
+            $resources = array_merge($resources, $panel->getResources());
+        }
+
+        // Ensure no duplicates
+        $resources = array_unique($resources);
+
         $resourceOptions = collect($resources)->mapWithKeys(fn ($resource) => [$resource => Str::title($resource::getModelLabel())])->all();
 
         return $table
