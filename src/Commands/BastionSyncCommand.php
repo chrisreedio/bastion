@@ -7,13 +7,15 @@ use Illuminate\Console\Command;
 
 class BastionSyncCommand extends Command
 {
-    public $signature = 'bastion:sync';
+    public $signature = 'bastion:sync {panel? : Panel identifier to sync policies and permissions for}';
 
     public $description = 'Generates policies and permissions based on the current Filament resources';
 
     public function handle(): int
     {
-        Bastion::sync();
+        $panel = $this->argument('panel');
+
+        Bastion::sync($panel);
 
         // All done
         $this->comment('All done');
