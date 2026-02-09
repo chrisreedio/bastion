@@ -22,8 +22,8 @@
     ],
     "require": {
         "php": "^8.3",
-        "chrisreedio/filament-policy-generator": "^4.0.0-beta",
-        "filament/filament": "^4.0",
+        "chrisreedio/filament-policy-generator": "^4.1.0",
+        "filament/filament": "^4.0|^5.0",
         "spatie/laravel-package-tools": "^1.15.0",
         "spatie/laravel-permission": "^6.0"
     },
