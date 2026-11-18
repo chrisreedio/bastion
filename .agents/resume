@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Fast repair after an orb wakes: keep the demo's `../bastion` path repository
+# pointing at this checkout.
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+if [ -d "$repo_root/../repos/bastion-demo" ]; then
+  ln -sfn "../$(basename "$repo_root")" "$repo_root/../repos/bastion"
+fi

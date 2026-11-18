@@ -1,0 +1,12 @@
+services:
+  demo:
+    cwd: ../repos/bastion-demo
+    command: >-
+      php artisan optimize:clear &&
+      APP_URL="$PUBLIC_URL" ASSET_URL="$PUBLIC_URL"
+      php artisan serve --host=0.0.0.0 --port="$PORT"
+    health: /up
+    portal:
+      url: /admin
+      title: Bastion demo
+      description: Sign in as admin@example.com / password.

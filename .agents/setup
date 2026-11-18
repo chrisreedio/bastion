@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# Prepares an Amp orb for Bastion: PHP 8.4 + Composer, package dependencies, and
+# (when checked out next to this repo) the bastion-demo app wired to this checkout.
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+demo_dir="$repo_root/../repos/bastion-demo"
+cd "$repo_root"
+
+step() {
+  local label="$1"
+  shift
+  local start=$SECONDS
+  echo "==> $label"
+  "$@"
+  echo "    ($label: $((SECONDS - start))s)"
+}
+
+apt_packages=(
+  php8.4-cli php8.4-bcmath php8.4-curl php8.4-gd php8.4-intl php8.4-mbstring
+  php8.4-sqlite3 php8.4-xml php8.4-zip php8.4-pcov
+  composer unzip sqlite3
+)
+
+install_system_packages() {
+  local missing=()
+  for pkg in "${apt_packages[@]}"; do
+    dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q 'install ok installed' || missing+=("$pkg")
+  done
+  if ((${#missing[@]} == 0)); then
+    echo "    all system packages present"
+    return
+  fi
+  sudo apt-get update -qq
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends "${missing[@]}"
+}
+
+install_package_dependencies() {
+  # composer.lock is gitignored here; the first run resolves it, later runs reuse it.
+  composer install --no-interaction --prefer-dist --no-progress
+}
+
+setup_demo() {
+  # The demo requires chrisreedio/bastion from a `../bastion` path repository
+  # (symlinked), so edits in this checkout show up in the demo immediately.
+  ln -sfn "../$(basename "$repo_root")" "$repo_root/../repos/bastion"
+
+  cd "$demo_dir"
+  composer install --no-interaction --prefer-dist --no-progress
+  [ -f .env ] || cp -- .env.example .env
+  grep -q '^APP_KEY=base64:' .env || php artisan key:generate --no-interaction
+  [ -f database/database.sqlite ] || touch database/database.sqlite
+  php artisan migrate --force --no-interaction
+  php artisan db:seed --force --no-interaction
+  php artisan bastion:sync admin --no-interaction
+  cd "$repo_root"
+}
+
+write_agent_notes() {
+  local notes="$HOME/.config/amp/AGENTS.md"
+  local marker="<!-- bastion orb notes -->"
+  mkdir -p "$(dirname "$notes")"
+  grep -Fqx "$marker" "$notes" 2>/dev/null && return
+  cat >> "$notes" <<'EOF'
+
+<!-- bastion orb notes -->
+# Bastion orb notes
+
+- PHP 8.4 and Composer come from Debian packages. Package checks: `composer test`, `composer analyse`, `composer format`.
+- The demo app lives in `../repos/bastion-demo` (Laravel 13 + Filament 5, SQLite). It loads Bastion from this checkout through `../repos/bastion` -> the package repo, so package edits apply to the demo without reinstalling.
+- Run the demo with `amp orb services ensure` (service `demo`). Sign in at `/admin` as `admin@example.com` / `password` (role Developer, the super admin).
+- Demo tests: `php artisan test` in the demo directory.
+EOF
+}
+
+step "System packages" install_system_packages
+step "Package dependencies" install_package_dependencies
+if [ -d "$demo_dir" ]; then
+  step "Demo app" setup_demo
+else
+  echo "==> Demo app: $demo_dir not present, skipping"
+fi
+step "Agent notes" write_agent_notes
